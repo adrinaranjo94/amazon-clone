@@ -1,26 +1,46 @@
 import React from "react";
 import "./Product.css";
+import StarIcon from "@material-ui/icons/Star";
+import { useStateValue } from "./StateProvider";
 
-const Product = () => {
+function Product({ id, title, price, rating, image }) {
+  const [{ basket }, dispatch] = useStateValue();
+
+  // console.log("this is the basket", basket);
+  const addToBasket = () => {
+    //Dispatch the item into the data layer
+    dispatch({
+      type: "ADD_TO_BASKET",
+      item: {
+        id: id,
+        title: title,
+        image: image,
+        price: price,
+        rating: rating,
+      },
+    });
+  };
+
   return (
     <div className="product">
       <div className="product__info">
-        <p>The lean startup</p>
+        <p>{title}</p>
         <p className="product__price">
           <small>$</small>
-          <strong>11.00</strong>
+          <strong>{price}</strong>
         </p>
         <div className="product__rating">
-          <p>⭐</p>
+          {Array(rating)
+            .fill()
+            .map((_, index) => (
+              <StarIcon key={index} />
+            ))}
         </div>
       </div>
-      <img
-        src="https://images-na.ssl-images-amazon.com/images/I/51Zymoq7UnL._AC_SY400_.jpg"
-        alt=""
-      />
-      <button>Add to basket</button>
+      <img src={image} alt={title} />
+      <button onClick={addToBasket}>Add to Cart</button>
     </div>
   );
-};
+}
 
 export default Product;
